@@ -1,0 +1,73 @@
+package lesson7;
+
+import java.io.*;
+import java.util.Scanner;
+
+public class HomeworkLesson7 {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+		System.out.print("Введите путь к папке как пример d:\\\\test : ");
+		String path = in.nextLine();
+
+		int[] count = { 0, 0 };
+		File dirmain = new File(path);
+
+		if (dirmain.isDirectory()) {
+			// File[] massiveFiles = { dirmain };
+			File[] masGeneral = { dirmain };
+			count = Calculatefiles(masGeneral, 0, 0);
+			System.out.println("Количество файлов =" + count[0]);
+			System.out.println("из них скрытых " + count[1]);
+		} else {
+			System.out.println("не верно задан путь к папке");
+		}
+	}
+
+	static File[] GetFiles(File mas, FileFilter filter) {
+		return mas.listFiles(filter);
+	}
+
+	static int[] Calculatefiles(File[] mas, int cou, int couHidden) {
+		int[] mode = { 0, 0 };
+
+		FileFilter filterIsGroup = new FileFilter() {
+			public boolean accept(File pathname) {
+				return pathname.isDirectory();
+			}
+		};
+
+		FileFilter filterIsFile = new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.isFile();
+			}
+		};
+
+		FileFilter filterIsHidden = new FileFilter() {
+			public boolean accept(File pathname) {
+				return pathname.isHidden();
+			}
+		};
+		for (File dir2 : mas) {
+			File[] fGroup = GetFiles(dir2, filterIsGroup);
+			File[] files = GetFiles(dir2, filterIsFile);
+			File[] filesHidden = GetFiles(dir2, filterIsHidden);
+			if (fGroup.length > 0) {
+				mode[0] = 0;
+				mode[1] = 0;
+				cou = cou + files.length;
+				couHidden = couHidden + filesHidden.length;
+				mode = Calculatefiles(fGroup, 0, 0);
+				cou = cou + mode[0];
+				couHidden = couHidden + mode[1];
+			} else {
+				cou = cou + files.length;
+				couHidden = couHidden + filesHidden.length;
+			}
+		}
+		int[] result = { cou, couHidden };
+		return result;
+	}
+}
