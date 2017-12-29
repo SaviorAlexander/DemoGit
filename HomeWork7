@@ -1,0 +1,44 @@
+import java.nio.file.Paths;
+import java.nio.file.*;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.io.IOException;
+import java.util.Scanner;
+
+
+public class Home {
+
+	public static void main(String[] args) throws IOException {
+
+			String pathDirectory="";
+			int maxDepth=0;
+		  Scanner sc = new Scanner(System.in);        
+	        try { 
+	        	System.out.println("Введите начальную директорию поиска");
+	        	pathDirectory = sc.nextLine();	                
+			Path start = Paths.get(pathDirectory);
+			System.out.println("Введите вложений папок для поиска");
+			maxDepth=sc.nextInt();
+			searchFiles(start,maxDepth);
+			searchFilesWalk(start,maxDepth);}
+	        catch ( Exception E ) { 
+	      	     sc.close();
+	        } 
+	}
+
+	private static void searchFiles(Path start, int maxDepth) throws IOException {
+		try (Stream<Path> stream = Files.find(start, maxDepth,
+				(path, attr) -> String.valueOf(path).endsWith(".java"))) {
+			String joined = stream.sorted().map(String::valueOf).collect(Collectors.joining("; "));
+			System.out.println("Поиск файлов с использованием 'Files.find'   " + joined);
+		}
+	}
+
+	private static void searchFilesWalk(Path start, int maxDepth) throws IOException {
+		try (Stream<Path> stream = Files.walk(start, maxDepth)) {
+			String joined = stream.map(String::valueOf).filter(path -> path.endsWith(".java")).sorted()
+					.collect(Collectors.joining("; "));
+			System.out.println("Поиск файлов с использованием 'Files.walk'  " + joined);
+		}
+	}
+}
