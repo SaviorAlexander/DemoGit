@@ -1,0 +1,14 @@
+import java.util.Formatter;
+
+public class PI {
+	public static void main(String args[]) {
+		int count;
+
+		for (count = 1; count < 6; count++) {
+			Formatter f = new Formatter();
+			f = new Formatter();
+			f.format("%1." + count + "f", Math.PI);
+			System.out.println(f);
+		}
+	}
+}
