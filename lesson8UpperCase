@@ -1,0 +1,27 @@
+
+public class UpperCase {
+	public static void main(String args[]) {
+
+		String str = "when i was younger\r\n" + "i never needed\r\n";
+
+		char previuos;
+		char c;
+		int count;
+		char[] chars = str.toCharArray();
+		str = "";
+		for (count = 0; count < chars.length; count++) {
+			c = chars[count];
+
+			if (count == 0) {
+				c = Character.toUpperCase(c);
+			}
+			if (count > 0) {
+				if (chars[count - 1] == ' ') {
+					c = Character.toUpperCase(c);
+				}
+			}
+			str += c;
+		}
+		System.out.println(str);
+	}
+}
